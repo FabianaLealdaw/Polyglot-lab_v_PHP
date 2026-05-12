@@ -1,0 +1,23 @@
+[
+  {
+    "id": "new-courses",
+    "title": "New language courses available",
+    "date": "01 February 2026",
+    "text": "We are happy to announce the launch of new Korean and Italian courses for beginners.",
+    "fullText": "We are happy to announce the launch of new Korean and Italian courses for beginners. These programs are designed for students who want to start learning a new language from scratch in a supportive and motivating environment. Classes focus on real communication, cultural context and practical use of the language, guided by native and certified teachers."
+  },
+  {
+    "id": "summer-programs",
+    "title": "Summer intensive programs",
+    "date": "15 March 2026",
+    "text": "Our summer intensive courses are now open for enrollment.",
+    "fullText": "Our summer intensive programs are now open for enrollment. These courses are ideal for students who want to improve their communication skills in a short period of time through immersive and intensive practice. Small groups and personalized attention ensure effective learning and visible progress."
+  },
+  {
+    "id": "online-classes",
+    "title": "Online classes now available",
+    "date": "10 January 2026",
+    "text": "You can now join our classes online and learn from anywhere in the world.",
+    "fullText": "You can now join our classes online and learn from anywhere in the world. Our online lessons offer the same quality, interaction and methodology as our in-person classes. This flexible option is perfect for students who want to learn at their own pace without geographical limitations."
+  }
+]

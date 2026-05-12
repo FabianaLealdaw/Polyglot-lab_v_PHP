@@ -1,0 +1,1326 @@
+/*===================
+    VARIABLES
+===================*/
+
+/* Importo los estilos del footer desde otro archivo */
+@import url("footer.css");
+
+/* Variables globales */
+:root {
+  --primary-color: #fcfae7;
+  --secondary-color: #b0d7c3;
+  --text-color: #545454;
+  --accent-color: #df6d69;
+
+  /* Altura del header para ajustar el padding del body */
+  --header-height: 120px;
+
+  /* Modo oscuro (dk)*/
+  --color-bg-dk: #545454;
+  --color-text-dk: #fcfae7;
+
+  /* Variables actuales */
+  --color-bg-current: var(--color-bg-lh);
+  --color-text-current: var(--color-text-dk);
+  --color-accent-current: var(--accent-color);
+}
+
+/* ===================
+    RESET Y BASE
+=================== */
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Estilos base del body */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  font-family: "Vend Sans", sans-serif;
+  padding-top: var(--header-height);
+  background: linear-gradient(135deg, #fcfae7 0%, #eef6df 100%);
+}
+
+/* Color general de los enlaces */
+a {
+  color: var(--color-text-current);
+}
+
+/*===================
+    HEADER
+===================*/
+
+/* Header fijo */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  height: var(--header-height);
+  display: flex;
+  padding: 2.5rem;
+  background-color: var(--secondary-color);
+}
+
+/* Contenedor del menú de navegación */
+.navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+  position: relative;
+  padding-left: 0;
+  padding-right: 0;
+  flex-wrap: wrap;
+}
+
+/* Estilo base de los enlaces del navbar */
+.navbar a {
+  text-decoration: none;
+  font-size: 1.2rem;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Enlace activo (página en la que estoy) */
+.navbar a.active {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+/* Logo colocado a la izquierda dentro del header */
+.nav-logo {
+  position: absolute;
+  left: 2.5rem;
+  text-decoration: none;
+}
+
+/* Tamaño del logo */
+.nav-logo img {
+  width: 160px;
+  height: auto;
+}
+
+/* Botón CTA colocado a la derecha */
+.nav-cta {
+  position: absolute;
+  right: 2.5rem;
+  background: var(--primary-color);
+  color: var(--accent-color);
+  padding: 0.7rem 1.6rem;
+  border-radius: 999px;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+/* Hover del botón CTA */
+.nav-cta:hover {
+  background: var(--accent-color);
+  color: var(--primary-color);
+}
+
+/* Hover para links normales del navbar */
+.navbar a:not(.nav-cta):hover {
+  color: var(--color-accent-current);
+}
+
+/*===================
+    HERO SECTION
+===================*/
+/* Contenedor principal: grid de 2 columnas, altura de pantalla menos header */
+.hero {
+  min-height: calc(100vh - var(--header-height));
+  padding: 6rem 8rem;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+
+  background: linear-gradient(135deg, #fcfae7 0%, #eef6df 100%);
+}
+
+/* Título colocado en la segunda columna, alineado a la derecha */
+.hero h1 {
+  grid-column: 2;
+  justify-self: end;
+
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  max-width: 700px;
+  text-align: right;
+  color: #4a4a4a;
+}
+
+/* Párrafos en la primera columna con margen interno izquierdo */
+.hero p {
+  grid-column: 1;
+  max-width: 900px;
+  text-align: left;
+  padding-left: 3.5rem;
+}
+
+/* Primer párrafo estilizado como cita */
+.hero p:first-of-type {
+  font-style: italic;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #545454;
+}
+
+/* Segundo párrafo como texto principal */
+.hero p:nth-of-type(2) {
+  font-size: 1.5rem;
+  line-height: 1.6;
+  color: #545454;
+}
+
+/* Último párrafo como cierre con peso medio */
+.hero p:last-of-type {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #545454;
+}
+
+/* =========================
+   GALLERY SECTION
+========================= */
+.gallery {
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  max-width: 1200px;
+}
+
+.gallery img {
+  width: 320px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 20px;
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.gallery img:hover {
+  transform: scale(1.03);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+.gallery-section h2 {
+  margin-bottom: 1rem;
+}
+.gallery-subtitle {
+  margin: 0 auto 3.5rem auto;
+  max-width: 520px;
+  line-height: 1.6;
+  text-align: center;
+}
+.gallery-grid {
+  margin-top: 0;
+}
+/* MODAL */
+#modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* IMAGEN DEL MODAL */
+#modal img {
+  display: block;
+  margin: auto;
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 12px;
+}
+
+/* =========================
+   NEWS SECTION
+   ========================= */
+
+/* General layout */
+.news-section {
+  padding: 5rem 2rem;
+  background-color: var(--primary-color);
+}
+
+/* Wrapper */
+.news-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Grid layout for the news cards */
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+/* Individual news card */
+.news-card {
+  display: block;
+  text-decoration: none;
+  background-color: #b0d7c3;
+  padding: 2rem;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+/* hover */
+.news-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+}
+
+/* News title */
+.news-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+/* News date */
+.news-date {
+  font-size: 0.85rem;
+  color: #545454;
+  margin-bottom: 1rem;
+}
+
+/* News text */
+.news-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--primary-color);
+  margin: 0;
+}
+/* =========================
+   NEWS DETAIL SECTION
+   ========================= */
+
+.news-detail-section {
+  padding: 6rem 2rem;
+  background-color: #fcfae7;
+}
+
+#news-detail-container {
+  max-width: 800px;
+  margin: 3rem auto 0 auto;
+}
+
+.news-detail-article {
+  margin-bottom: 4rem;
+}
+
+.news-detail-article h3 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.news-detail-date {
+  font-size: 0.9rem;
+  color: #fcfae7;
+  margin-bottom: 1.5rem;
+}
+
+.news-detail-article p {
+  font-size: 1rem;
+  line-height: 1.7;
+}
+.news-detail-article {
+  background-color: #b0d7c3;
+  padding: 3rem;
+  border-radius: 20px;
+}
+/* =========================
+   SECTION TITLES
+   ========================= */
+
+/* Main section titles */
+.section-title {
+  text-align: center;
+  font-size: 2.6rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+/* Section subtitles */
+.section-subtitle {
+  text-align: center;
+  font-size: 1rem;
+  color: #7a7a7a;
+  margin-bottom: 3rem;
+}
+
+/* =========================
+   NEWS BUDGET LINK
+   ========================= */
+
+.news-budget-link {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 0.8rem 1.8rem;
+  background-color: var(--accent-color);
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 30px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.news-budget-link:hover {
+  background-color: #c95c58;
+}
+
+/* ===================
+   CONTACT SECTION
+=================== */
+
+.contact-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem; 
+  text-align: center;
+}
+
+/* Título */
+.contact-title {
+  font-size: clamp(3rem, 6vw, 4.2rem);
+  font-weight: 800;
+  color: var(--accent-color);
+  margin-bottom: 0.3rem;
+}
+
+/* Subtítulo */
+.contact-subtitle {
+  max-width: 520px;
+  font-size: 1.15rem;
+  color: var(--text-color);
+  opacity: 0.85;
+  line-height: 1.6;
+}
+
+/* ===== MAPA GOOGLE ===== */
+.map-wrapper {
+  width: 100%;
+  max-width: 100%;
+  height: 380px;
+  border: 3px solid var(--accent-color);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+
+.map-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* Keep Leaflet tile images from inheriting site image sizing rules */
+.leaflet-container img {
+  max-width: none !important;
+}
+
+/* Botón ruta */
+.map-link {
+  margin-top: 0.5rem;
+  color: var(--accent-color);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.map-link:hover {
+  text-decoration: underline;
+}
+
+/* ===== INFO DE CONTACTO ===== */
+.contact-info {
+  margin-top: 2.5rem;
+  max-width: 420px;
+  text-align: center;
+  color: var(--text-color);
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center;
+  margin: 2.5rem auto 0;
+  max-width: 420px;
+  text-align: center;
+}
+.contact-info h2 {
+  text-align: center;
+}
+
+.contact-info h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.contact-info p {
+  margin: 0.25rem 0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .map-wrapper {
+    height: 320px;
+  }
+}
+
+/*===================
+    FORMULARIO
+===================*/
+
+main {
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #fdfbe8 0%, #eef6df 100%);
+  font-size: 2rem;
+}
+
+/* =========================
+   TARJETA FORMULARIO
+   ========================= */
+
+.formulario {
+  width: min(720px, 92vw);
+  background-color: #df6d69;
+  border: 6px solid #b0d7c3;
+  padding: 3.5rem 4rem 2.2rem;
+  margin: 2% auto;
+  box-sizing: border-box;
+  color: #fcfae7;
+  overflow: hidden;
+}
+
+/* =========================
+   TÍTULO
+   ========================= */
+
+.formulario h2 {
+  margin: 0 0 2.5rem;
+  text-align: center;
+  font-size: clamp(2.2rem, 4vw, 3.3rem);
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+/* =========================
+   LABELS
+   ========================= */
+
+.formulario label {
+  display: block;
+  margin-top: 1.4rem;
+  margin-bottom: 0.6rem;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #fcfae7;
+}
+
+/* =========================
+   INPUTS Y TEXTAREA
+   ========================= */
+
+.formulario input,
+.formulario textarea,
+.formulario select {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.35);
+  padding: 0.7rem 0.2rem;
+  font-size: 1.15rem;
+  color: #fcfae7;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* Placeholder */
+.formulario input::placeholder,
+.formulario textarea::placeholder {
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.35);
+}
+
+/* Focus */
+.formulario input:focus,
+.formulario textarea:focus,
+.formulario select:focus {
+  border-bottom-color: rgba(0, 0, 0, 0.6);
+}
+
+/* Textarea */
+.formulario textarea {
+  resize: none;
+  padding-top: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+/* Select */
+.formulario select {
+  cursor: pointer;
+  appearance: none;
+}
+
+/* Input número */
+.formulario input[type="number"] {
+  max-width: 140px;
+}
+
+/* =========================
+   FIELDSET EXTRAS
+   ========================= */
+
+.formulario fieldset.extras {
+  border: none;
+  padding: 0;
+  margin-top: 2.5rem;
+}
+
+/* Título extras */
+.formulario fieldset.extras legend {
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #fcfae7;
+}
+
+/* Opciones extras */
+.formulario fieldset.extras label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  margin: 0.6rem 0;
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.4;
+  white-space: normal;
+}
+
+/* Checkbox */
+.formulario input[type="checkbox"] {
+  width: auto;
+  margin-top: 0.25rem;
+  accent-color: #b0d7c3;
+  cursor: pointer;
+}
+
+/* =========================
+   TOTAL
+   ========================= */
+
+#total-price {
+  margin-top: 3rem;
+  padding-top: 1.4rem;
+  font-size: 1.6rem;
+  font-weight: 800;
+  text-align: center;
+  color: #fcfae7;
+  border-top: 2px solid rgba(0, 0, 0, 0.35);
+}
+
+/* =========================
+   PRIVACIDAD
+   ========================= */
+
+.formulario .privacy {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-top: 1.8rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.formulario .privacy label {
+  margin: 0;
+  font-weight: 400;
+  color: #fcfae7;
+}
+
+.formulario .privacy a {
+  color: #fcfae7;
+  text-decoration: underline;
+}
+
+.formulario .privacy a:hover {
+  opacity: 0.85;
+}
+
+/* =========================
+   BOTÓN
+   ========================= */
+
+.formulario button {
+  width: 100%;
+  margin-top: 2.2rem;
+  background-color: #b0d7c3;
+  border: none;
+  padding: 1.2rem 1rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #fcfae7;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.formulario button:hover {
+  transform: translateY(-2px);
+  opacity: 0.95;
+}
+
+.formulario button:active {
+  transform: translateY(0);
+  opacity: 0.9;
+}
+
+.formulario button[type="reset"] {
+  background-color: transparent;
+  border: 2px solid #fcfae7;
+  color: #fcfae7;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+/* Hover */
+.formulario button[type="reset"]:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 640px) {
+  .formulario {
+    padding: 2.5rem 1.8rem 1.8rem;
+    border-width: 5px;
+  }
+
+  .formulario label {
+    font-size: 1.05rem;
+  }
+
+  .formulario input,
+  .formulario textarea,
+  .formulario select {
+    font-size: 1.05rem;
+  }
+
+  #total-price {
+    font-size: 1.4rem;
+  }
+}
+
+/*===================
+    COURSES SECTION
+===================*/
+/* Sección principal de cursos */
+.courses {
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+/* Título principal */
+.courses-title {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Subtítulo centrado con ancho limitado */
+.courses-subtitle {
+  max-width: 680px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
+}
+
+/* Contenedor flexible de tarjetas */
+.courses-wrap {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 2.2rem;
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
+/* Tarjeta individual de curso */
+.course-card {
+  width: calc(33.333% - 1.5rem);
+  max-width: 280px;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 28px;
+  padding: 1.2rem 1.2rem 1.4rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Tablet: dos columnas */
+@media (max-width: 900px) {
+  .course-card {
+    width: calc(50% - 1.5rem);
+  }
+}
+
+/* Móvil: una columna */
+@media (max-width: 500px) {
+  .course-card {
+    width: 100%;
+  }
+}
+
+/* Imagen del curso */
+.course-img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 22px;
+  display: block;
+}
+
+/* Nombre del curso */
+.course-name {
+  margin: 1rem 0 0.6rem;
+  font-size: 1.25rem;
+}
+
+/* Contenedor de detalles */
+.course-details {
+  margin-top: auto;
+}
+
+/* Botón resumen de detalles */
+.course-more {
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 600;
+  padding: 0.55rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.06);
+  transition: transform 0.15s ease;
+  list-style: none;
+}
+
+/* Quitar marcador por defecto */
+.course-more::-webkit-details-marker {
+  display: none;
+}
+
+/* Estado abierto */
+.course-details[open] .course-more {
+  transform: translateY(-1px);
+}
+
+/* Descripción del curso */
+.course-desc {
+  margin: 0.9rem 0 1rem;
+  line-height: 1.55;
+  font-size: 0.95rem;
+  opacity: 0.92;
+}
+
+/* Botón de acción */
+.course-cta {
+  display: inline-block;
+  text-decoration: none;
+  font-weight: 700;
+  padding: 0.7rem 1.1rem;
+  border-radius: 999px;
+  background: #e86b63;
+  color: #fff;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+/* Hover del botón */
+.course-cta:hover {
+  transform: translateY(-2px);
+  opacity: 0.95;
+}
+
+/* ===================
+   CONTACT SECTION
+=================== */
+
+.contact-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  text-align: center;
+}
+
+/* Título */
+.contact-title {
+  font-size: clamp(3rem, 6vw, 4.2rem);
+  font-weight: 800;
+  color: var(--accent-color);
+  margin-bottom: 0.3rem;
+}
+
+/* Subtítulo */
+.contact-subtitle {
+  max-width: 520px;
+  font-size: 1.15rem;
+  color: var(--text-color);
+  opacity: 0.85;
+  line-height: 1.6;
+}
+
+/* ===== MAPA GOOGLE ===== */
+.map-wrapper {
+  width: 100%;
+  max-width: 100%;
+  height: 380px;
+  border: 3px solid var(--accent-color);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+
+.map-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* Botón ruta */
+.map-link {
+  margin-top: 0.5rem;
+  color: var(--accent-color);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.map-link:hover {
+  text-decoration: underline;
+}
+
+.map-button-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.map-button {
+  background-color: var(--accent-color);
+  color: #fcfae7;
+  padding: 0.8rem 1.6rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.map-button:hover {
+  background-color: #c95c58;
+  transform: translateY(-2px);
+}
+
+/* ===== INFO DE CONTACTO ===== */
+.contact-info {
+  margin-top: 3rem;
+  padding: 2rem;
+  max-width: 420px;
+  text-align: center;
+
+  background-color: transparent;
+  border: 2px solid var(--accent-color);
+  border-radius: 12px;
+
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Título */
+.contact-info h2 {
+  margin-bottom: 1.2rem;
+}
+
+/* Texto */
+.contact-info p {
+  margin: 0.4rem 0;
+}
+
+/* ICONOS */
+.contact-info i {
+  color: var(--accent-color);
+  margin-right: 6px;
+}
+
+/* LINKS */
+.contact-info a {
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.3s ease;
+}
+
+.contact-info a:hover {
+  opacity: 0.8;
+}
+/* Responsive */
+@media (max-width: 600px) {
+  .map-wrapper {
+    height: 320px;
+  }
+}
+
+/*===================
+    GET A QUOTE SECTION 
+===================*/
+/* Fondo del contenido principal */
+main {
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #fdfbe8 0%, #eef6df 100%);
+}
+
+/* Tarjeta del formulario centrada */
+.formulario {
+  width: min(720px, 92vw);
+  background-color: #df6d69;
+  border: 6px solid #b0d7c3;
+  padding: 3.5rem 4rem 2.2rem;
+  box-sizing: border-box;
+  color: #fcfae7;
+  margin: 2% auto;
+}
+
+/* Título del formulario centrado */
+.formulario h2 {
+  margin: 0 0 2.5rem;
+  text-align: center;
+  font-size: clamp(2.2rem, 4vw, 3.3rem);
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+/* Labels en bloque */
+.formulario label {
+  display: block;
+  margin-top: 1.4rem;
+  margin-bottom: 0.6rem;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #fcfae7;
+}
+
+/* Inputs y textarea a ancho completo */
+.formulario input,
+.formulario textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.35);
+  padding: 0.7rem 0.2rem;
+  font-size: 1.15rem;
+  color: #fcfae7;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* Placeholder en cursiva */
+.formulario input::placeholder,
+.formulario textarea::placeholder {
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.35);
+}
+
+/* Ajustes específicos del textarea */
+.formulario textarea {
+  border-bottom: 2px solid rgba(0, 0, 0, 0.35);
+  resize: none;
+  padding-top: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+/* Estado focus */
+.formulario input:focus,
+.formulario textarea:focus {
+  border-bottom-color: rgba(0, 0, 0, 0.6);
+}
+
+/* Botón principal */
+.formulario button {
+  width: 100%;
+  margin-top: 2.2rem;
+  background-color: #b0d7c3;
+  border: none;
+  padding: 1.2rem 1rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #fcfae7;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+/* Hover */
+.formulario button:hover {
+  transform: translateY(-2px);
+  opacity: 0.95;
+}
+
+/* Active */
+.formulario button:active {
+  transform: translateY(0);
+  opacity: 0.9;
+}
+
+/* Contenedor del checkbox de privacidad */
+.formulario .privacy {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin-top: 1.8rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* Checkbox */
+.formulario .privacy input[type="checkbox"] {
+  width: auto;
+  margin-top: 0.25rem;
+  accent-color: #b0d7c3;
+  cursor: pointer;
+}
+
+/* Label del checkbox */
+.formulario .privacy label {
+  margin: 0;
+  font-weight: 400;
+  color: #fcfae7;
+}
+
+/* Link dentro del texto */
+.formulario .privacy a {
+  color: #fcfae7;
+  text-decoration: underline;
+}
+
+/* Hover del link */
+.formulario .privacy a:hover {
+  opacity: 0.85;
+}
+
+@media (max-width: 640px) {
+  .formulario {
+    padding: 2.5rem 1.8rem 1.8rem;
+    border-width: 5px;
+  }
+
+  .formulario label {
+    font-size: 1.05rem;
+  }
+
+  .formulario input,
+  .formulario textarea {
+    font-size: 1.05rem;
+  }
+}
+
+/*===================
+    FOOTER SECTION 
+===================*/
+/* FOOTER BASE */
+footer {
+  background-color: var(--secondary-color);
+  padding: 4rem 6rem 2rem;
+  font-family: inherit;
+  color: var(--text-color);
+}
+
+/* CONTENEDOR PRINCIPAL */
+footer > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 4rem;
+}
+
+/* COLUMNAS */
+footer .vision,
+footer .quick_links,
+footer .contact,
+footer .social_media {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* VISION */
+footer .vision img {
+  margin-bottom: 1rem;
+}
+
+footer .vision p {
+  max-width: 320px;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* TITULOS */
+footer h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* QUICK LINKS */
+footer .quick_links nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+footer .quick_links a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-size: 0.95rem;
+}
+
+footer .quick_links a:hover {
+  text-decoration: underline;
+}
+
+/* CONTACT */
+footer .contact ul {
+  padding: 0;
+  margin: 0;
+}
+
+footer .contact ul li {
+  list-style: none;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* SOCIAL MEDIA */
+footer .social_media ul {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0;
+  margin: 0;
+}
+
+footer .social_media ul li {
+  list-style: none;
+  cursor: pointer;
+}
+
+/* LINEA SEPARADORA */
+
+footer .divide {
+  border-top: 1px solid var(--accent-color);
+  margin: 2rem 0;
+}
+
+/* COPYRIGHT */
+footer > p {
+  text-align: center;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* ICONOS REDES SOCIALES */
+footer .social_media a {
+  color: var(--accent-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+  text-decoration: none;
+}
+
+/* Hover */
+footer .social_media a:hover {
+  color: var(--text-color);
+  transform: scale(1.1);
+}
+
+/* ==== Pagina de Privacy ==== */
+.privacy-page {
+  max-width: 900px;
+  margin: 4rem auto 6rem;
+  padding: 0 2rem;
+  color: var(--text-color);
+  line-height: 1.7;
+}
+
+.privacy-page h1 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.privacy-page h2 {
+  margin-top: 2.5rem;
+  margin-bottom: 0.8rem;
+  font-size: 1.4rem;
+}
+
+.privacy-page ul {
+  margin-left: 1.2rem;
+}
+
+.privacy-footer {
+  margin-top: 3rem;
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
