@@ -33,23 +33,11 @@
   </head>
 
   <body>
-    <!-- Header con navegación principal -->
-    <header>
-      <nav class="navbar">
-        <a href="../index.php">Home</a>
-        <a href="./courses.php">Courses</a>
-        <a href="./gallery.php">Gallery</a>
-        <a href="./contact.php" class="active">Contact</a>
-        <a href="./get_a_quote.php">Get a Quote</a>
-
-        <!-- Logo  -->
-        <a class="nav-logo" href="../index.php">
-          <img src="../assets/images/Logo_PL.png" alt="Polyglot Lab">
-        </a>
-
-        <a href="./get_a_quote.php" class="nav-cta">Start now</a>
-      </nav>
-    </header>
+    <?php
+    $base_path = "../";
+    $current_page = "contact";
+    ?>
+    <?php include("../includes/navbar.php"); ?>
 
     <!-- Contenido principal de la página -->
     <main class="contact-page">

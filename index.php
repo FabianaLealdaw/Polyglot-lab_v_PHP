@@ -1,3 +1,18 @@
+<?php
+require_once __DIR__ . "/includes/conexion.php";
+
+$news_items = [];
+$sql_news = "SELECT id_noticia, titulo, resumen, contenido, fecha_publicacion
+             FROM noticias
+             ORDER BY fecha_publicacion DESC, id_noticia DESC";
+$result_news = mysqli_query($conn, $sql_news);
+
+if ($result_news) {
+    while ($row = mysqli_fetch_assoc($result_news)) {
+        $news_items[] = $row;
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -41,7 +56,10 @@
   </head>
 
   <body>
-
+    <?php
+    $base_path = "";
+    $current_page = "home";
+    ?>
     <?php include("includes/navbar.php"); ?>
 
     <!-- Contenido principal de la página -->
@@ -67,7 +85,30 @@
           </p>
 
           <div id="news-container" class="news-grid">
-            <!-- Las noticias se cargaran aqui -->
+            <?php foreach ($news_items as $item) : ?>
+              <?php
+              $formatted_news_date = $item["fecha_publicacion"];
+              $news_timestamp = strtotime($item["fecha_publicacion"]);
+
+              if ($news_timestamp !== false) {
+                  $formatted_news_date = date("d F Y", $news_timestamp);
+              }
+              ?>
+              <article
+                class="news-card"
+                role="button"
+                tabindex="0"
+                data-title="<?php echo htmlspecialchars($item["titulo"], ENT_QUOTES); ?>"
+                data-date="<?php echo htmlspecialchars($formatted_news_date, ENT_QUOTES); ?>"
+                data-content="<?php echo htmlspecialchars($item["contenido"], ENT_QUOTES); ?>"
+                onclick="showNewsDetail(this)"
+                onkeydown="if(event.key === 'Enter' || event.key === ' ') { event.preventDefault(); showNewsDetail(this); }"
+              >
+                <h3><?php echo htmlspecialchars($item["titulo"]); ?></h3>
+                <p class="news-date"><?php echo htmlspecialchars($formatted_news_date); ?></p>
+                <p><?php echo htmlspecialchars($item["resumen"]); ?></p>
+              </article>
+            <?php endforeach; ?>
           </div>
         </div>
       </section>

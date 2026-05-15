@@ -10,17 +10,11 @@
   </head>
 
   <body>
-    <!-- Header con navegación principal -->
-    <header>
-      <nav class="navbar">
-        <a href="../index.php">Home</a>
-        <a href="./courses.php">Courses</a>
-        <a href="./gallery.php">Gallery</a>
-        <a href="./contact.php">Contact</a>
-        <a href="./get_a_quote.php">Get a Quote</a>
-        <a href="./legal_notice.php">Legal Notice</a>
-      </nav>
-    </header>
+    <?php
+    $base_path = "../";
+    $current_page = "privacy";
+    ?>
+    <?php include("../includes/navbar.php"); ?>
     
     <main class="privacy-page">
       <h1>Privacy Policy</h1>

@@ -9,15 +9,11 @@
   </head>
 
   <body>
-    <header>
-      <nav class="navbar">
-        <a href="../index.php">Home</a>
-        <a href="./courses.php">Courses</a>
-        <a href="./gallery.php">Gallery</a>
-        <a href="./contact.php">Contact</a>
-        <a href="./get_a_quote.php">Get a Quote</a>
-      </nav>
-    </header>
+    <?php
+    $base_path = "../";
+    $current_page = "legal";
+    ?>
+    <?php include("../includes/navbar.php"); ?>
 
     <main class="privacy-page">
       <h1>Legal Notice</h1>

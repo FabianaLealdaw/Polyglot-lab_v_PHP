@@ -135,6 +135,12 @@ header {
   color: var(--color-accent-current);
 }
 
+.nav-status {
+  font-size: 1.05rem;
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
 /*===================
     HERO SECTION
 ===================*/
@@ -1158,6 +1164,131 @@ main {
   opacity: 0.85;
 }
 
+.form-message {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.2rem;
+  border-radius: 14px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.form-message p + p {
+  margin-top: 0.5rem;
+}
+
+.form-message-error {
+  background-color: #f9d8d6;
+  color: #8a2f2b;
+}
+
+.form-message-success {
+  background-color: #d8eadf;
+  color: #2d6545;
+}
+
+.form-message-link {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.form-message-inline {
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #fcfae7;
+}
+
+.form-message-inline p {
+  margin: 0;
+}
+
+.appointments-section {
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+  padding: 0 2rem;
+}
+
+.appointments-card {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.5rem;
+  border: 6px solid var(--secondary-color);
+  background-color: rgba(252, 250, 231, 0.8);
+  color: var(--text-color);
+}
+
+.appointments-card h2 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 2.3rem;
+}
+
+.appointments-empty {
+  text-align: center;
+  font-size: 1.05rem;
+}
+
+.appointments-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.appointments-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+
+.appointments-table th,
+.appointments-table td {
+  padding: 1rem 0.9rem;
+  border-bottom: 1px solid rgba(84, 84, 84, 0.25);
+  text-align: left;
+  font-size: 0.98rem;
+}
+
+.appointments-table th {
+  color: var(--accent-color);
+  font-weight: 700;
+}
+
+.appointments-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.appointments-link,
+.appointments-delete,
+.appointments-locked {
+  font-size: 0.95rem;
+}
+
+.appointments-link {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
+.appointments-inline-form {
+  margin: 0;
+}
+
+.appointments-delete {
+  background: none;
+  border: none;
+  color: var(--accent-color);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+}
+
+.appointments-locked {
+  color: #7a7a7a;
+}
+
 @media (max-width: 640px) {
   .formulario {
     padding: 2.5rem 1.8rem 1.8rem;
@@ -1323,4 +1454,121 @@ footer .social_media a:hover {
   margin-top: 3rem;
   font-size: 0.9rem;
   opacity: 0.7;
+}
+
+
+@media (max-width: 1180px) {
+  :root {
+    --header-height: 170px;
+  }
+
+  header {
+    height: auto;
+    padding: 1.75rem 1.5rem;
+  }
+
+  .navbar {
+    justify-content: center;
+    gap: 0.9rem 1.2rem;
+    padding-top: 4.2rem;
+    padding-right: 8.5rem;
+    padding-left: 8.5rem;
+  }
+
+  .navbar a {
+    font-size: 1rem;
+  }
+
+  .nav-logo {
+    left: 1.5rem;
+    top: 1.4rem;
+  }
+
+  .nav-logo img {
+    width: 125px;
+  }
+
+  .nav-cta {
+    right: 1.5rem;
+    top: 1.6rem;
+    padding: 0.65rem 1.3rem;
+  }
+}
+
+@media (max-width: 820px) {
+  :root {
+    --header-height: 220px;
+  }
+
+  header {
+    padding: 1.25rem 1rem 1.5rem;
+  }
+
+  .navbar {
+    gap: 0.7rem 1rem;
+    padding-top: 5.1rem;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .navbar a {
+    font-size: 0.95rem;
+  }
+
+  .nav-logo {
+    position: static;
+    order: -2;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.35rem;
+  }
+
+  .nav-logo img {
+    width: 120px;
+  }
+
+  .nav-cta {
+    position: static;
+    order: -1;
+    margin: 0 auto 0.6rem;
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --header-height: 260px;
+  }
+
+  .navbar {
+    gap: 0.55rem 0.85rem;
+    padding-top: 5.6rem;
+  }
+
+  .navbar a {
+    font-size: 0.9rem;
+  }
+
+  .nav-cta {
+    padding: 0.6rem 1.1rem;
+  }
+
+  .hero {
+    padding: 3rem 2rem;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .hero h1 {
+    grid-column: 1;
+    justify-self: center;
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .hero p {
+    grid-column: 1;
+    padding-left: 0;
+    max-width: 100%;
+  }
 }

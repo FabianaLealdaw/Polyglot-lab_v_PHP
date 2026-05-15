@@ -24,24 +24,11 @@
   </head>
 
   <body>
-    <!-- Header con navegación principal -->
-    <header>
-      <nav class="navbar">
-        <!-- Logo que vuelve a la página principal -->
-        <a class="nav-logo" href="../index.php">
-          <img src="../assets/images/Logo_PL.png" alt="Polyglot Lab">
-        </a>
-
-        <a href="../index.php">Home</a>
-        <a href="./courses.php">Courses</a>
-        <a href="./gallery.php">Gallery</a>
-        <a href="./contact.php">Contact</a>
-        <a href="#" class="active">Get a Quote</a>
-
-        <!-- CTA -->
-        <a href="#formulario-web" class="nav-cta">Start now</a>
-      </nav>
-    </header>
+    <?php
+    $base_path = "../";
+    $current_page = "quote";
+    ?>
+    <?php include("../includes/navbar.php"); ?>
 
     <main>
     

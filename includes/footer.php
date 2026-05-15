@@ -13,7 +13,7 @@
         <div class="quick_links">
           <h3>Quick Links</h3>
           <nav>
-            <a href="#inicio">Home</a>
+            <a href="./index.php">Home</a>
             <a href="./views/courses.php">Courses</a>
             <a href="./views/gallery.php">Gallery</a>
             <a href="./views/contact.php">Contact</a>

@@ -1,84 +1,56 @@
 const newsContainer = document.getElementById("news-container");
 
-// Se utiliza fetch para obtener los datos del archivo JSON
-fetch("data/news.json")
-  .then((response) => response.json())
-  .then((news) => {
-    // Se recorre cada noticia del archivo JSON
-    news.forEach((item) => {
-      // Se crea el elemento principal de la tarjeta de noticia
-      const article = document.createElement("article");
-      article.classList.add("news-card");
+function showNewsDetail(article) {
+  const detailContainer = document.getElementById("news-detail-container");
+  const detailSection = document.getElementById("news-detail");
 
-      // Se crea y se añade el título de la noticia
-      const title = document.createElement("h3");
-      title.textContent = item.title;
+  if (!article || !detailContainer || !detailSection) {
+    return;
+  }
 
-      // Se crea y se añade la fecha de la noticia
-      const date = document.createElement("p");
-      date.classList.add("news-date");
-      date.textContent = item.date;
+  detailContainer.innerHTML = "";
 
-      // Se crea y se añade el texto resumen de la noticia
-      const text = document.createElement("p");
-      text.textContent = item.text;
+  const fullArticle = document.createElement("article");
+  fullArticle.classList.add("news-detail-article");
 
-      // Se añaden todos los elementos a la tarjeta
-      article.appendChild(title);
-      article.appendChild(date);
-      article.appendChild(text);
+  const fullTitle = document.createElement("h3");
+  fullTitle.textContent = article.dataset.title || "";
 
-      // Se añade la tarjeta al contenedor de noticias
-      newsContainer.appendChild(article);
+  const fullDate = document.createElement("p");
+  fullDate.classList.add("news-detail-date");
+  fullDate.textContent = article.dataset.date || "";
 
-      // Al hacer clic en una noticia se muestra su contenido completo
-      article.addEventListener("click", () => {
-        const detailContainer = document.getElementById(
-          "news-detail-container",
-        );
+  const fullText = document.createElement("p");
+  fullText.textContent = article.dataset.content || "";
 
-        // Se limpia el contenido anterior de la sección de detalle
-        detailContainer.innerHTML = "";
+  fullArticle.appendChild(fullTitle);
+  fullArticle.appendChild(fullDate);
+  fullArticle.appendChild(fullText);
 
-        // Se crea el artículo con la noticia desarrollada
-        const fullArticle = document.createElement("article");
-        fullArticle.classList.add("news-detail-article");
+  const budgetLink = document.createElement("a");
+  budgetLink.href = "views/get_a_quote.php";
+  budgetLink.textContent = "Request a quote";
+  budgetLink.classList.add("news-budget-link");
 
-        const fullTitle = document.createElement("h3");
-        fullTitle.textContent = item.title;
+  fullArticle.appendChild(budgetLink);
+  detailContainer.appendChild(fullArticle);
 
-        const fullDate = document.createElement("p");
-        fullDate.classList.add("news-detail-date");
-        fullDate.textContent = item.date;
-
-        const fullText = document.createElement("p");
-        fullText.textContent = item.fullText;
-
-        // Se añaden los elementos al artículo completo
-        fullArticle.appendChild(fullTitle);
-        fullArticle.appendChild(fullDate);
-        fullArticle.appendChild(fullText);
-
-        // Se muestra la noticia desarrollada en la sección correspondiente
-        detailContainer.appendChild(fullArticle);
-        // Botón para ir a la página de presupuesto
-        const budgetLink = document.createElement("a");
-        budgetLink.href = "views/get_a_quote.html";
-        budgetLink.textContent = "Request a quote";
-        budgetLink.classList.add("news-budget-link");
-
-        fullArticle.appendChild(budgetLink);
-
-        // Se realiza un desplazamiento suave hasta la sección de detalle
-        const targetPosition = document.getElementById("news-detail").offsetTop;
-
-        window.scrollTo({
-          top: targetPosition - 80,
-          behavior: "smooth",
-        });
-      });
-    });
-  })
-  .catch((error) => {
-    console.error("Error al cargar las noticias:", error);
+  window.scrollTo({
+    top: detailSection.offsetTop - 80,
+    behavior: "smooth",
   });
+}
+
+window.showNewsDetail = showNewsDetail;
+
+if (newsContainer) {
+  newsContainer.addEventListener("click", (event) => {
+    const article = event.target.closest(".news-card");
+
+    if (!article) {
+      return;
+    }
+
+    showNewsDetail(article);
+  });
+}
