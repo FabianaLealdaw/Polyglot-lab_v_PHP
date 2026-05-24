@@ -20,11 +20,27 @@ function showNewsDetail(article) {
   fullDate.classList.add("news-detail-date");
   fullDate.textContent = article.dataset.date || "";
 
-  const fullText = document.createElement("p");
-  fullText.textContent = article.dataset.content || "";
+  const fullAuthor = document.createElement("p");
+  fullAuthor.classList.add("news-detail-author");
+  fullAuthor.textContent = `Created by: ${article.dataset.author || "Polyglot Lab"}`;
 
   fullArticle.appendChild(fullTitle);
   fullArticle.appendChild(fullDate);
+  fullArticle.appendChild(fullAuthor);
+
+  const imageSrc = article.dataset.image || "";
+
+  if (imageSrc !== "") {
+    const fullImage = document.createElement("img");
+    fullImage.src = imageSrc;
+    fullImage.alt = article.dataset.title || "News image";
+    fullImage.classList.add("news-detail-image");
+    fullArticle.appendChild(fullImage);
+  }
+
+  const fullText = document.createElement("p");
+  fullText.textContent = article.dataset.content || "";
+
   fullArticle.appendChild(fullText);
 
   const budgetLink = document.createElement("a");

@@ -13,6 +13,7 @@ $logo_src = $base_path . "assets/images/Logo_PL.png";
 <header>
   <nav class="navbar" aria-label="Primary navigation">
     <a href="<?php echo $home_href; ?>" class="<?php echo $current_page === "home" ? "active" : ""; ?>">Home</a>
+    <a href="<?php echo $base_path; ?>noticias.php" class="<?php echo $current_page === "noticias" ? "active" : ""; ?>">News</a>
     <a href="<?php echo $base_path; ?>views/courses.php" class="<?php echo $current_page === "courses" ? "active" : ""; ?>">Courses</a>
     <a href="<?php echo $base_path; ?>views/gallery.php" class="<?php echo $current_page === "gallery" ? "active" : ""; ?>">Gallery</a>
     <a href="<?php echo $base_path; ?>views/contact.php" class="<?php echo $current_page === "contact" ? "active" : ""; ?>">Contact</a>
@@ -26,8 +27,8 @@ $logo_src = $base_path . "assets/images/Logo_PL.png";
         <a href="<?php echo $base_path; ?>admin_citas.php" class="<?php echo $current_page === "admin_citas" ? "active" : ""; ?>">Admin appointments</a>
         <a href="<?php echo $base_path; ?>admin_users.php" class="<?php echo $current_page === "admin_users" ? "active" : ""; ?>">Admin users</a>
       <?php endif; ?>
-      <a href="<?php echo $base_path; ?>citas.php" class="<?php echo $current_page === "citas" ? "active" : ""; ?>">My appointments</a>
-      <a href="<?php echo $base_path; ?>profile.php" class="<?php echo $current_page === "profile" ? "active" : ""; ?>">My profile</a>
+      <a href="<?php echo $base_path; ?>citas.php" class="<?php echo $current_page === "citas" ? "active" : ""; ?>">Appointments</a>
+      <a href="<?php echo $base_path; ?>profile.php" class="<?php echo $current_page === "profile" ? "active" : ""; ?>">Profile</a>
     <?php endif; ?>
 
     <a class="nav-logo" href="<?php echo $home_href; ?>">
@@ -41,3 +42,25 @@ $logo_src = $base_path . "assets/images/Logo_PL.png";
     <?php endif; ?>
   </nav>
 </header>
+<script>
+  (function () {
+    const root = document.documentElement;
+    const header = document.querySelector("header");
+    const navbar = header ? header.querySelector(".navbar") : null;
+
+    if (!root || !header || !navbar) return;
+
+    const updateHeaderHeight = () => {
+      const headerStyles = window.getComputedStyle(header);
+      const paddingTop = parseFloat(headerStyles.paddingTop) || 0;
+      const paddingBottom = parseFloat(headerStyles.paddingBottom) || 0;
+      const realHeight = Math.ceil(navbar.scrollHeight + paddingTop + paddingBottom);
+
+      root.style.setProperty("--header-height", `${realHeight}px`);
+    };
+
+    updateHeaderHeight();
+    window.addEventListener("load", updateHeaderHeight);
+    window.addEventListener("resize", updateHeaderHeight);
+  })();
+</script>

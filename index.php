@@ -2,9 +2,11 @@
 require_once __DIR__ . "/includes/conexion.php";
 
 $news_items = [];
-$sql_news = "SELECT id_noticia, titulo, resumen, contenido, fecha_publicacion
-             FROM noticias
-             ORDER BY fecha_publicacion DESC, id_noticia DESC";
+$sql_news = "SELECT n.id_noticia, n.titulo, n.resumen, n.contenido, n.imagen, n.fecha_publicacion,
+                    COALESCE(NULLIF(n.autor_nombre, ''), TRIM(CONCAT(ud.nombre, ' ', ud.apellidos)), 'Polyglot Lab') AS autor_mostrar
+             FROM noticias n
+             LEFT JOIN users_data ud ON ud.id_user = n.id_user
+             ORDER BY n.fecha_publicacion DESC, n.id_noticia DESC";
 $result_news = mysqli_query($conn, $sql_news);
 
 if ($result_news) {
@@ -101,6 +103,8 @@ if ($result_news) {
                 data-title="<?php echo htmlspecialchars($item["titulo"], ENT_QUOTES); ?>"
                 data-date="<?php echo htmlspecialchars($formatted_news_date, ENT_QUOTES); ?>"
                 data-content="<?php echo htmlspecialchars($item["contenido"], ENT_QUOTES); ?>"
+                data-image="<?php echo htmlspecialchars($item["imagen"] ?? "", ENT_QUOTES); ?>"
+                data-author="<?php echo htmlspecialchars($item["autor_mostrar"] ?? "Polyglot Lab", ENT_QUOTES); ?>"
                 onclick="showNewsDetail(this)"
                 onkeydown="if(event.key === 'Enter' || event.key === ' ') { event.preventDefault(); showNewsDetail(this); }"
               >
@@ -109,6 +113,10 @@ if ($result_news) {
                 <p><?php echo htmlspecialchars($item["resumen"]); ?></p>
               </article>
             <?php endforeach; ?>
+          </div>
+
+          <div class="news-view-all-wrap">
+            <a href="noticias.php" class="news-budget-link">View all news</a>
           </div>
         </div>
       </section>
@@ -344,7 +352,7 @@ if ($result_news) {
       <!-- Sección del formulario -->
       <section>
         <!-- Formulario para pedir presupuesto -->
-        <form id="formulario-web" class="formulario" name="webForm">
+        <form id="formulario-web" class="formulario" name="webForm" action="views/get_a_quote.php" method="POST">
           <h2>Get a Quote!</h2>
 
           <!-- =====================
@@ -428,6 +436,7 @@ if ($result_news) {
           <input 
             type="number" 
             id="plazo" 
+            name="plazo"
             min="1" 
             required
           >
@@ -519,6 +528,6 @@ if ($result_news) {
     <script src="./js/budget.js"></script>
 
     <!-- mapa -->
-    <script src="./js/map.js"></script>
+    <script src="./js/map.js?v=2"></script>
   </body>
 </html>

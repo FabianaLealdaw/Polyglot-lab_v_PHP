@@ -105,12 +105,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if (empty($errors) && $form_type === "create") {
             $estado = "pendiente";
-            $sql_insert = "INSERT INTO citas (id_user, titulo, descripcion, fecha_cita, hora_cita, estado)
-                           VALUES (?, ?, ?, ?, ?, ?)";
+            $motivo_cita = $descripcion !== "" ? $descripcion : $titulo;
+            $sql_insert = "INSERT INTO citas (id_user, titulo, descripcion, motivo_cita, fecha_cita, hora_cita, estado)
+                           VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt_insert = mysqli_prepare($conn, $sql_insert);
 
             if ($stmt_insert) {
-                mysqli_stmt_bind_param($stmt_insert, "isssss", $user_id, $titulo, $descripcion, $fecha_cita, $hora_cita, $estado);
+                mysqli_stmt_bind_param($stmt_insert, "issssss", $user_id, $titulo, $descripcion, $motivo_cita, $fecha_cita, $hora_cita, $estado);
 
                 if (mysqli_stmt_execute($stmt_insert)) {
                     $success_message = "Appointment created successfully.";
@@ -130,13 +131,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if (empty($errors) && $form_type === "update") {
             $appointment_status = $appointment["estado"] ?? "pendiente";
+            $motivo_cita = $descripcion !== "" ? $descripcion : $titulo;
             $sql_update = "UPDATE citas
-                           SET titulo = ?, descripcion = ?, fecha_cita = ?, hora_cita = ?, estado = ?
+                           SET titulo = ?, descripcion = ?, motivo_cita = ?, fecha_cita = ?, hora_cita = ?, estado = ?
                            WHERE id_cita = ? AND id_user = ?";
             $stmt_update = mysqli_prepare($conn, $sql_update);
 
             if ($stmt_update) {
-                mysqli_stmt_bind_param($stmt_update, "sssssii", $titulo, $descripcion, $fecha_cita, $hora_cita, $appointment_status, $edit_id, $user_id);
+                mysqli_stmt_bind_param($stmt_update, "ssssssii", $titulo, $descripcion, $motivo_cita, $fecha_cita, $hora_cita, $appointment_status, $edit_id, $user_id);
 
                 if (mysqli_stmt_execute($stmt_update)) {
                     $success_message = "Appointment updated successfully.";

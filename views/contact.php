@@ -157,7 +157,7 @@
       crossorigin=""
     ></script>
     <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
-    <script src="../js/map.js"></script>
+    <script src="../js/map.js?v=2"></script>
 
   </body>
 </html>

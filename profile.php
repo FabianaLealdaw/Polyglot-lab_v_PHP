@@ -19,10 +19,13 @@ $nombre = "";
 $apellidos = "";
 $email = "";
 $telefono = "";
+$fecha_nacimiento = "";
+$direccion = "";
+$sexo = "prefer_not_to_say";
 
 function loadUserData(mysqli $conn, int $user_id): ?array
 {
-    $sql = "SELECT nombre, apellidos, email, telefono FROM users_data WHERE id_user = ?";
+    $sql = "SELECT nombre, apellidos, email, telefono, fecha_nacimiento, direccion, sexo FROM users_data WHERE id_user = ?";
     $stmt = mysqli_prepare($conn, $sql);
 
     if (!$stmt) {
@@ -50,6 +53,9 @@ $nombre = $user_data["nombre"];
 $apellidos = $user_data["apellidos"];
 $email = $user_data["email"];
 $telefono = $user_data["telefono"] ?? "";
+$fecha_nacimiento = $user_data["fecha_nacimiento"] ?? "";
+$direccion = $user_data["direccion"] ?? "";
+$sexo = $user_data["sexo"] ?? "prefer_not_to_say";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $form_type = $_POST["form_type"] ?? "profile";
@@ -59,6 +65,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $apellidos = trim($_POST["apellidos"] ?? "");
         $email = trim($_POST["email"] ?? "");
         $telefono = trim($_POST["telefono"] ?? "");
+        $fecha_nacimiento = $_POST["fecha_nacimiento"] ?? "";
+        $direccion = trim($_POST["direccion"] ?? "");
+        $sexo = $_POST["sexo"] ?? "prefer_not_to_say";
 
         if ($nombre === "" || !preg_match("/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{1,50}$/", $nombre)) {
             $errors[] = "Please enter a valid name.";
@@ -72,8 +81,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $errors[] = "Please enter a valid email address.";
         }
 
-        if ($telefono !== "" && !preg_match("/^[0-9]{9}$/", $telefono)) {
+        if ($telefono === "" || !preg_match("/^[0-9]{9}$/", $telefono)) {
             $errors[] = "Phone number must contain 9 digits.";
+        }
+
+        if ($fecha_nacimiento === "") {
+            $errors[] = "Please select your birth date.";
+        }
+
+        if ($direccion === "" || mb_strlen($direccion) > 150) {
+            $errors[] = "Please enter a valid address.";
+        }
+
+        if (!in_array($sexo, ["female", "male", "other", "prefer_not_to_say"], true)) {
+            $errors[] = "Please select a valid sex value.";
         }
 
         if (empty($errors)) {
@@ -96,11 +117,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         if (empty($errors)) {
-            $sql_update = "UPDATE users_data SET nombre = ?, apellidos = ?, email = ?, telefono = ? WHERE id_user = ?";
+            $sql_update = "UPDATE users_data SET nombre = ?, apellidos = ?, email = ?, telefono = ?, fecha_nacimiento = ?, direccion = ?, sexo = ? WHERE id_user = ?";
             $stmt_update = mysqli_prepare($conn, $sql_update);
 
             if ($stmt_update) {
-                mysqli_stmt_bind_param($stmt_update, "ssssi", $nombre, $apellidos, $email, $telefono, $user_id);
+                mysqli_stmt_bind_param($stmt_update, "sssssssi", $nombre, $apellidos, $email, $telefono, $fecha_nacimiento, $direccion, $sexo, $user_id);
 
                 if (mysqli_stmt_execute($stmt_update)) {
                     $_SESSION["nombre"] = $nombre;
@@ -265,8 +286,37 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           type="tel"
           id="telefono"
           name="telefono"
+          placeholder="123456789"
+          required
           value="<?php echo htmlspecialchars($telefono); ?>"
         >
+
+        <label for="fecha_nacimiento">Birth date</label>
+        <input
+          type="date"
+          id="fecha_nacimiento"
+          name="fecha_nacimiento"
+          required
+          value="<?php echo htmlspecialchars($fecha_nacimiento); ?>"
+        >
+
+        <label for="direccion">Address</label>
+        <input
+          type="text"
+          id="direccion"
+          name="direccion"
+          placeholder="Your address"
+          required
+          value="<?php echo htmlspecialchars($direccion); ?>"
+        >
+
+        <label for="sexo">Sex</label>
+        <select id="sexo" name="sexo" required>
+          <option value="female" <?php echo $sexo === "female" ? "selected" : ""; ?>>Female</option>
+          <option value="male" <?php echo $sexo === "male" ? "selected" : ""; ?>>Male</option>
+          <option value="other" <?php echo $sexo === "other" ? "selected" : ""; ?>>Other</option>
+          <option value="prefer_not_to_say" <?php echo $sexo === "prefer_not_to_say" ? "selected" : ""; ?>>Prefer not to say</option>
+        </select>
 
         <button type="submit">Save changes</button>
       </form>

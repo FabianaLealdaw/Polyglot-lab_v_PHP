@@ -6,6 +6,9 @@ $nombre = "";
 $apellidos = "";
 $email = "";
 $telefono = "";
+$fecha_nacimiento = "";
+$direccion = "";
+$sexo = "prefer_not_to_say";
 $username = "";
 
 $errors = [];
@@ -15,6 +18,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $apellidos = trim($_POST["apellidos"] ?? "");
     $email = trim($_POST["email"] ?? "");
     $telefono = trim($_POST["telefono"] ?? "");
+    $fecha_nacimiento = $_POST["fecha_nacimiento"] ?? "";
+    $direccion = trim($_POST["direccion"] ?? "");
+    $sexo = $_POST["sexo"] ?? "prefer_not_to_say";
     $username = trim($_POST["username"] ?? "");
     $password = $_POST["password"] ?? "";
     $confirm_password = $_POST["confirm_password"] ?? "";
@@ -32,8 +38,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $errors[] = "Please enter a valid email address.";
     }
 
-    if ($telefono !== "" && !preg_match("/^[0-9]{9}$/", $telefono)) {
+    if ($telefono === "" || !preg_match("/^[0-9]{9}$/", $telefono)) {
         $errors[] = "Phone number must contain 9 digits.";
+    }
+
+    if ($fecha_nacimiento === "") {
+        $errors[] = "Please select your birth date.";
+    }
+
+    if ($direccion === "" || mb_strlen($direccion) > 150) {
+        $errors[] = "Please enter a valid address.";
+    }
+
+    if (!in_array($sexo, ["female", "male", "other", "prefer_not_to_say"], true)) {
+        $errors[] = "Please select a valid sex value.";
     }
 
     if ($username === "" || !preg_match("/^[A-Za-z0-9_.]{4,20}$/", $username)) {
@@ -96,14 +114,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         mysqli_begin_transaction($conn);
 
         try {
-            $sql_user_data = "INSERT INTO users_data (nombre, apellidos, email, telefono) VALUES (?, ?, ?, ?)";
+            $sql_user_data = "INSERT INTO users_data (nombre, apellidos, email, telefono, fecha_nacimiento, direccion, sexo) VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt_user_data = mysqli_prepare($conn, $sql_user_data);
 
             if (!$stmt_user_data) {
                 throw new Exception("Could not prepare personal data query.");
             }
 
-            mysqli_stmt_bind_param($stmt_user_data, "ssss", $nombre, $apellidos, $email, $telefono);
+            mysqli_stmt_bind_param($stmt_user_data, "sssssss", $nombre, $apellidos, $email, $telefono, $fecha_nacimiento, $direccion, $sexo);
 
             if (!mysqli_stmt_execute($stmt_user_data)) {
                 throw new Exception("Could not save personal data.");
@@ -113,14 +131,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             mysqli_stmt_close($stmt_user_data);
 
             $role = "user";
-            $sql_user_login = "INSERT INTO users_login (id_user, username, password, role) VALUES (?, ?, ?, ?)";
+            $sql_user_login = "INSERT INTO users_login (id_user, username, usuario, password, role) VALUES (?, ?, ?, ?, ?)";
             $stmt_user_login = mysqli_prepare($conn, $sql_user_login);
 
             if (!$stmt_user_login) {
                 throw new Exception("Could not prepare login data query.");
             }
 
-            mysqli_stmt_bind_param($stmt_user_login, "isss", $id_user, $username, $password_hash, $role);
+            mysqli_stmt_bind_param($stmt_user_login, "issss", $id_user, $username, $username, $password_hash, $role);
 
             if (!mysqli_stmt_execute($stmt_user_login)) {
                 throw new Exception("Could not save login data.");
@@ -216,8 +234,36 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           id="telefono"
           name="telefono"
           placeholder="123456789"
+          required
           value="<?php echo htmlspecialchars($telefono); ?>"
         >
+
+        <label for="fecha_nacimiento">Birth date</label>
+        <input
+          type="date"
+          id="fecha_nacimiento"
+          name="fecha_nacimiento"
+          required
+          value="<?php echo htmlspecialchars($fecha_nacimiento); ?>"
+        >
+
+        <label for="direccion">Address</label>
+        <input
+          type="text"
+          id="direccion"
+          name="direccion"
+          placeholder="Your address"
+          required
+          value="<?php echo htmlspecialchars($direccion); ?>"
+        >
+
+        <label for="sexo">Sex</label>
+        <select id="sexo" name="sexo" required>
+          <option value="female" <?php echo $sexo === "female" ? "selected" : ""; ?>>Female</option>
+          <option value="male" <?php echo $sexo === "male" ? "selected" : ""; ?>>Male</option>
+          <option value="other" <?php echo $sexo === "other" ? "selected" : ""; ?>>Other</option>
+          <option value="prefer_not_to_say" <?php echo $sexo === "prefer_not_to_say" ? "selected" : ""; ?>>Prefer not to say</option>
+        </select>
 
         <label for="username">Username</label>
         <input

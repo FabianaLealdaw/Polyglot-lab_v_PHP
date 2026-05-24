@@ -16,6 +16,7 @@ $errors = [];
 $success_message = "";
 
 $id_cita = 0;
+$id_user_selected = 0;
 $titulo = "";
 $descripcion = "";
 $fecha_cita = "";
@@ -69,11 +70,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if ($form_type === "update") {
         $id_cita = (int) ($_POST["id_cita"] ?? 0);
+        $id_user_selected = (int) ($_POST["id_user"] ?? 0);
         $titulo = trim($_POST["titulo"] ?? "");
         $descripcion = trim($_POST["descripcion"] ?? "");
         $fecha_cita = $_POST["fecha_cita"] ?? "";
         $hora_cita = $_POST["hora_cita"] ?? "";
         $estado = $_POST["estado"] ?? "pendiente";
+
+        if ($id_user_selected <= 0) {
+            $errors[] = "Please select a user.";
+        }
 
         if ($titulo === "" || mb_strlen($titulo) > 100) {
             $errors[] = "Please enter a valid title.";
@@ -92,29 +98,58 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         if (empty($errors)) {
-            $sql_update = "UPDATE citas
-                           SET titulo = ?, descripcion = ?, fecha_cita = ?, hora_cita = ?, estado = ?
-                           WHERE id_cita = ?";
-            $stmt_update = mysqli_prepare($conn, $sql_update);
+            $motivo_cita = $descripcion !== "" ? $descripcion : $titulo;
+            if ($id_cita > 0) {
+                $sql_update = "UPDATE citas
+                               SET id_user = ?, titulo = ?, descripcion = ?, motivo_cita = ?, fecha_cita = ?, hora_cita = ?, estado = ?
+                               WHERE id_cita = ?";
+                $stmt_update = mysqli_prepare($conn, $sql_update);
 
-            if ($stmt_update) {
-                mysqli_stmt_bind_param($stmt_update, "sssssi", $titulo, $descripcion, $fecha_cita, $hora_cita, $estado, $id_cita);
+                if ($stmt_update) {
+                    mysqli_stmt_bind_param($stmt_update, "issssssi", $id_user_selected, $titulo, $descripcion, $motivo_cita, $fecha_cita, $hora_cita, $estado, $id_cita);
 
-                if (mysqli_stmt_execute($stmt_update)) {
-                    $success_message = "Appointment updated successfully.";
-                    $id_cita = 0;
-                    $titulo = "";
-                    $descripcion = "";
-                    $fecha_cita = "";
-                    $hora_cita = "";
-                    $estado = "pendiente";
+                    if (mysqli_stmt_execute($stmt_update)) {
+                        $success_message = "Appointment updated successfully.";
+                        $id_cita = 0;
+                        $id_user_selected = 0;
+                        $titulo = "";
+                        $descripcion = "";
+                        $fecha_cita = "";
+                        $hora_cita = "";
+                        $estado = "pendiente";
+                    } else {
+                        $errors[] = "Could not update the appointment.";
+                    }
+
+                    mysqli_stmt_close($stmt_update);
                 } else {
-                    $errors[] = "Could not update the appointment.";
+                    $errors[] = "Could not prepare the update query.";
                 }
-
-                mysqli_stmt_close($stmt_update);
             } else {
-                $errors[] = "Could not prepare the update query.";
+                $sql_insert = "INSERT INTO citas (id_user, titulo, descripcion, motivo_cita, fecha_cita, hora_cita, estado)
+                               VALUES (?, ?, ?, ?, ?, ?, ?)";
+                $stmt_insert = mysqli_prepare($conn, $sql_insert);
+
+                if ($stmt_insert) {
+                    mysqli_stmt_bind_param($stmt_insert, "issssss", $id_user_selected, $titulo, $descripcion, $motivo_cita, $fecha_cita, $hora_cita, $estado);
+
+                    if (mysqli_stmt_execute($stmt_insert)) {
+                        $success_message = "Appointment created successfully.";
+                        $id_cita = 0;
+                        $id_user_selected = 0;
+                        $titulo = "";
+                        $descripcion = "";
+                        $fecha_cita = "";
+                        $hora_cita = "";
+                        $estado = "pendiente";
+                    } else {
+                        $errors[] = "Could not create the appointment.";
+                    }
+
+                    mysqli_stmt_close($stmt_insert);
+                } else {
+                    $errors[] = "Could not prepare the insert query.";
+                }
             }
         }
     }
@@ -125,6 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["edit"])) {
     $appointment = getAdminAppointmentById($conn, $id_cita);
 
     if ($appointment) {
+        $id_user_selected = (int) $appointment["id_user"];
         $titulo = $appointment["titulo"];
         $descripcion = $appointment["descripcion"] ?? "";
         $fecha_cita = $appointment["fecha_cita"];
@@ -147,6 +183,19 @@ $result_list = mysqli_query($conn, $sql_list);
 if ($result_list) {
     while ($row = mysqli_fetch_assoc($result_list)) {
         $appointments[] = $row;
+    }
+}
+
+$users = [];
+$sql_users = "SELECT ud.id_user, ud.nombre, ud.apellidos, ul.username
+              FROM users_data ud
+              INNER JOIN users_login ul ON ul.id_user = ud.id_user
+              ORDER BY ud.nombre ASC, ud.apellidos ASC";
+$result_users = mysqli_query($conn, $sql_users);
+
+if ($result_users) {
+    while ($row = mysqli_fetch_assoc($result_users)) {
+        $users[] = $row;
     }
 }
 ?>
@@ -200,11 +249,22 @@ if ($result_list) {
         <input type="hidden" name="form_type" value="update">
         <input type="hidden" name="id_cita" value="<?php echo (int) $id_cita; ?>">
 
+        <label for="id_user">User</label>
+        <select id="id_user" name="id_user" required>
+          <option value="">Select a user</option>
+          <?php foreach ($users as $user_option) : ?>
+            <option value="<?php echo (int) $user_option["id_user"]; ?>" <?php echo $id_user_selected === (int) $user_option["id_user"] ? "selected" : ""; ?>>
+              <?php echo htmlspecialchars($user_option["nombre"] . " " . $user_option["apellidos"] . " (" . $user_option["username"] . ")"); ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+
         <label for="titulo">Title</label>
         <input
           type="text"
           id="titulo"
           name="titulo"
+          placeholder="Type the appointment title"
           required
           value="<?php echo htmlspecialchars($titulo); ?>"
         >
@@ -214,6 +274,7 @@ if ($result_list) {
           id="descripcion"
           name="descripcion"
           rows="5"
+          placeholder="Add details about the appointment"
         ><?php echo htmlspecialchars($descripcion); ?></textarea>
 
         <label for="fecha_cita">Date</label>
@@ -241,7 +302,7 @@ if ($result_list) {
           <option value="cancelada" <?php echo $estado === "cancelada" ? "selected" : ""; ?>>Cancelled</option>
         </select>
 
-        <button type="submit"><?php echo $id_cita > 0 ? "Update appointment" : "Select one appointment to edit"; ?></button>
+        <button type="submit"><?php echo $id_cita > 0 ? "Update appointment" : "Create appointment"; ?></button>
       </form>
 
       <section class="appointments-section">

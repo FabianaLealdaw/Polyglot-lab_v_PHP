@@ -21,6 +21,8 @@ $contenido = "";
 $imagen = "";
 $fecha_publicacion = date("Y-m-d");
 $edit_id = 0;
+$autor_nombre = "";
+$id_user_autor = (int) ($_SESSION["user_id"] ?? 0);
 
 function getNewsById(mysqli $conn, int $id_noticia): ?array
 {
@@ -83,17 +85,44 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $errors[] = "Please enter the full content.";
         }
 
+        if ($imagen === "") {
+            $errors[] = "Please enter an image path or URL.";
+        }
+
         if ($fecha_publicacion === "") {
             $errors[] = "Please select a publication date.";
         }
 
+        if (empty($errors)) {
+            $sql_duplicate = "SELECT id_noticia FROM noticias WHERE titulo = ? AND id_noticia != ?";
+            $stmt_duplicate = mysqli_prepare($conn, $sql_duplicate);
+
+            if ($stmt_duplicate) {
+                mysqli_stmt_bind_param($stmt_duplicate, "si", $titulo, $edit_id);
+                mysqli_stmt_execute($stmt_duplicate);
+                $duplicate_result = mysqli_stmt_get_result($stmt_duplicate);
+
+                if (mysqli_fetch_assoc($duplicate_result)) {
+                    $errors[] = "A news item with that title already exists.";
+                }
+
+                mysqli_stmt_close($stmt_duplicate);
+            }
+        }
+
         if (empty($errors) && $form_type === "create") {
-            $sql_insert = "INSERT INTO noticias (titulo, resumen, contenido, imagen, fecha_publicacion)
-                           VALUES (?, ?, ?, ?, ?)";
+            $autor_nombre = trim(($_SESSION["nombre"] ?? "") . " " . ($_SESSION["apellidos"] ?? ""));
+
+            if ($autor_nombre === "") {
+                $autor_nombre = $_SESSION["username"] ?? "Polyglot Lab Admin";
+            }
+
+            $sql_insert = "INSERT INTO noticias (id_user, titulo, resumen, contenido, imagen, autor_nombre, fecha_publicacion)
+                           VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt_insert = mysqli_prepare($conn, $sql_insert);
 
             if ($stmt_insert) {
-                mysqli_stmt_bind_param($stmt_insert, "sssss", $titulo, $resumen, $contenido, $imagen, $fecha_publicacion);
+                mysqli_stmt_bind_param($stmt_insert, "issssss", $id_user_autor, $titulo, $resumen, $contenido, $imagen, $autor_nombre, $fecha_publicacion);
 
                 if (mysqli_stmt_execute($stmt_insert)) {
                     $success_message = "News item created successfully.";
@@ -114,12 +143,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if (empty($errors) && $form_type === "update") {
             $sql_update = "UPDATE noticias
-                           SET titulo = ?, resumen = ?, contenido = ?, imagen = ?, fecha_publicacion = ?
+                           SET titulo = ?, resumen = ?, contenido = ?, imagen = ?, autor_nombre = ?, fecha_publicacion = ?
                            WHERE id_noticia = ?";
             $stmt_update = mysqli_prepare($conn, $sql_update);
 
             if ($stmt_update) {
-                mysqli_stmt_bind_param($stmt_update, "sssssi", $titulo, $resumen, $contenido, $imagen, $fecha_publicacion, $edit_id);
+                $autor_nombre = trim(($_SESSION["nombre"] ?? "") . " " . ($_SESSION["apellidos"] ?? ""));
+
+                if ($autor_nombre === "") {
+                    $autor_nombre = $_SESSION["username"] ?? "Polyglot Lab Admin";
+                }
+
+                mysqli_stmt_bind_param($stmt_update, "ssssssi", $titulo, $resumen, $contenido, $imagen, $autor_nombre, $fecha_publicacion, $edit_id);
 
                 if (mysqli_stmt_execute($stmt_update)) {
                     $success_message = "News item updated successfully.";
@@ -129,6 +164,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     $imagen = "";
                     $fecha_publicacion = date("Y-m-d");
                     $edit_id = 0;
+$autor_nombre = "";
                 } else {
                     $errors[] = "Could not update the news item.";
                 }
@@ -150,15 +186,20 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET["edit"])) {
         $resumen = $news_item["resumen"];
         $contenido = $news_item["contenido"];
         $imagen = $news_item["imagen"] ?? "";
+        $autor_nombre = $news_item["autor_nombre"] ?? "Polyglot Lab Admin";
         $fecha_publicacion = $news_item["fecha_publicacion"];
     } else {
         $errors[] = "News item not found.";
         $edit_id = 0;
+$autor_nombre = "";
     }
 }
 
 $news_list = [];
-$sql_list = "SELECT * FROM noticias ORDER BY fecha_publicacion DESC, id_noticia DESC";
+$sql_list = "SELECT n.*, COALESCE(NULLIF(n.autor_nombre, ''), TRIM(CONCAT(ud.nombre, ' ', ud.apellidos)), 'Polyglot Lab Admin') AS autor_mostrar
+             FROM noticias n
+             LEFT JOIN users_data ud ON ud.id_user = n.id_user
+             ORDER BY n.fecha_publicacion DESC, n.id_noticia DESC";
 $result_list = mysqli_query($conn, $sql_list);
 
 if ($result_list) {
@@ -222,6 +263,7 @@ if ($result_list) {
           type="text"
           id="titulo"
           name="titulo"
+          placeholder="Write the news title"
           required
           value="<?php echo htmlspecialchars($titulo); ?>"
         >
@@ -231,6 +273,7 @@ if ($result_list) {
           id="resumen"
           name="resumen"
           rows="4"
+          placeholder="Add a short summary for the news card"
           required
         ><?php echo htmlspecialchars($resumen); ?></textarea>
 
@@ -239,14 +282,17 @@ if ($result_list) {
           id="contenido"
           name="contenido"
           rows="7"
+          placeholder="Write the full news content"
           required
         ><?php echo htmlspecialchars($contenido); ?></textarea>
 
-        <label for="imagen">Image path or URL (optional)</label>
+        <label for="imagen">Image path or URL</label>
         <input
           type="text"
           id="imagen"
           name="imagen"
+          placeholder="./assets/images/gallery/clase1.jpg or https://..."
+          required
           value="<?php echo htmlspecialchars($imagen); ?>"
         >
 
@@ -276,6 +322,7 @@ if ($result_list) {
                     <th>Title</th>
                     <th>Date</th>
                     <th>Summary</th>
+                    <th>Author</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -285,6 +332,7 @@ if ($result_list) {
                       <td><?php echo htmlspecialchars($news_item["titulo"]); ?></td>
                       <td><?php echo htmlspecialchars($news_item["fecha_publicacion"]); ?></td>
                       <td><?php echo htmlspecialchars($news_item["resumen"]); ?></td>
+                      <td><?php echo htmlspecialchars($news_item["autor_mostrar"] ?? "Polyglot Lab Admin"); ?></td>
                       <td class="appointments-actions">
                         <a href="admin_noticias.php?edit=<?php echo (int) $news_item["id_noticia"]; ?>" class="appointments-link">Edit</a>
                         <form action="admin_noticias.php" method="POST" class="appointments-inline-form">

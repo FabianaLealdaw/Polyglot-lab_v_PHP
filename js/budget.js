@@ -7,7 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("formulario-web");
   const privacy = document.getElementById("privacy");
 
-  if (!form) return;
+  if (!form || !courseSelect || !monthsInput || !plazoInput || !totalPriceElement) {
+    return;
+  }
 
   function calculateTotal() {
     const coursePrice = Number(courseSelect.value);
@@ -16,21 +18,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let total = coursePrice * months;
 
-    // DESCUENTO POR MESES
     if (months >= 3 && months <= 5) {
       total *= 0.95;
     } else if (months >= 6) {
       total *= 0.9;
     }
 
-    // EXTRAS
     extrasCheckboxes.forEach((extra) => {
       if (extra.checked) {
         total += Number(extra.value);
       }
     });
 
-    // DESCUENTO POR PLAZO
     let descuento = 0;
 
     if (plazo <= 7) {
@@ -53,7 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
     totalPriceElement.textContent = `Total: €${total.toFixed(2)}`;
   }
 
-  // EVENTOS
   courseSelect.addEventListener("change", updateTotal);
   monthsInput.addEventListener("input", updateTotal);
   plazoInput.addEventListener("input", updateTotal);
@@ -62,52 +60,52 @@ document.addEventListener("DOMContentLoaded", () => {
     extra.addEventListener("change", updateTotal);
   });
 
-  // SUBMIT
   form.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    const nombre = document.getElementById("nombre").value.trim();
-    const apellidos = document.getElementById("apellidos").value.trim();
-    const telefono = document.getElementById("telefono").value.trim();
-    const correo = document.getElementById("correo").value.trim();
+    const nombre = document.getElementById("nombre")?.value.trim() || "";
+    const apellidos = document.getElementById("apellidos")?.value.trim() || "";
+    const telefono = document.getElementById("telefono")?.value.trim() || "";
+    const correo = document.getElementById("correo")?.value.trim() || "";
+    const descripcion = document.getElementById("descripcion")?.value.trim() || "";
 
     if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]{1,15}$/.test(nombre)) {
+      event.preventDefault();
       alert("Invalid name");
       return;
     }
 
     if (!/^[A-Za-zÀ-ÿ\s]{1,40}$/.test(apellidos)) {
+      event.preventDefault();
       alert("Invalid surname");
       return;
     }
 
     if (!/^[0-9]{9}$/.test(telefono)) {
+      event.preventDefault();
       alert("Phone must be 9 digits");
       return;
     }
 
     if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(correo)) {
+      event.preventDefault();
       alert("Invalid email");
       return;
     }
 
-    if (!privacy.checked) {
-      alert("You must accept the Privacy Policy");
+    if (descripcion.length < 10 || descripcion.length > 300) {
+      event.preventDefault();
+      alert("Description must be between 10 and 300 characters");
       return;
     }
 
-    // TODO CORRECTO
-    alert(`✔ Form sent! Total: €${calculateTotal().toFixed(2)}`);
-
-    form.reset();
-    updateTotal();
+    if (!privacy.checked) {
+      event.preventDefault();
+      alert("You must accept the Privacy Policy");
+    }
   });
 
-  // RESET
   form.addEventListener("reset", () => {
     setTimeout(updateTotal, 0);
   });
 
-  // INICIAL
   updateTotal();
 });
